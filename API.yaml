@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   version: v1
-  title: My API
+  title: Index Ads API
 basePath: /
 paths:
   /api/authentication/login:
