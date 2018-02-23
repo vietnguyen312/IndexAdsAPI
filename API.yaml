@@ -1300,21 +1300,27 @@ paths:
   /api/favorite:
     get:
       tags:
-        - Favorite
+      - Favorite
+      summary: Get favorite ads by user.
       operationId: ApiFavoriteGet
+      parameters: []
       responses:
-        '200':
+        200:
           description: Success
           content:
-            text/plain:
-              schema:
-                $ref: '#/components/schemas/VehicleUserFavoriteAdsListViewModel'
             application/json:
               schema:
-                $ref: '#/components/schemas/VehicleUserFavoriteAdsListViewModel'
-            text/json:
-              schema:
-                $ref: '#/components/schemas/VehicleUserFavoriteAdsListViewModel'
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehicleUserFavoriteAdsViewModel'
+                description: Success
+      deprecated: false
+      security: []
+      x-operation-settings:
+        CollectParameters: false
+        AllowDynamicQueryParameters: false
+        AllowDynamicFormParameters: false
+        IsMultiContentStreaming: false
     post:
       tags:
         - Favorite
