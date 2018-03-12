@@ -5633,8 +5633,8 @@ definitions:
       name:
         type: string
       id:
-        format: uuid
-        type: string
+        type: integer
+        format: int32
       models:
         type: array
         items:
@@ -5645,8 +5645,8 @@ definitions:
       name:
         type: string
       id:
-        format: uuid
-        type: string
+        type: integer
+        format: int32
   VehicleUserFavoriteAdsViewModel:
     type: object
     properties:
