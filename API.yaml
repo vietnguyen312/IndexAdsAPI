@@ -1,3 +1,4 @@
+
 swagger: '2.0'
 info:
   version: v1
@@ -1198,7 +1199,11 @@ paths:
       parameters:
         - name: carAdsUpdateSavedSearchViewModel
           in: body
-          description: ''
+          description: 'NotifyFrequency: 
+          Instantly = 1,
+          Daily = 2,
+          Weekly = 3,
+          Monthly = 4'
           required: false
           schema:
             $ref: '#/definitions/CarAdsUpdateSavedSearchViewModel'
@@ -1229,7 +1234,11 @@ paths:
       parameters:
         - name: carAdsSaveSearchViewModel
           in: body
-          description: ''
+          description: 'NotifyFrequency: 
+          Instantly = 1,
+          Daily = 2,
+          Weekly = 3,
+          Monthly = 4'
           required: false
           schema:
             $ref: '#/definitions/CarAdsSaveSearchViewModel'
@@ -7277,3 +7286,4 @@ definitions:
     properties: {}
 securityDefinitions: {}
 security: []
+
