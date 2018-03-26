@@ -1,4 +1,3 @@
-
 swagger: '2.0'
 info:
   version: v1
@@ -26,6 +25,31 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/FileStreamResult'
+  /api/image:
+    post:
+      tags:
+        - AdsImage
+      summary: upload a list of image
+      operationId: ApiImagePost
+      consumes:
+         - multipart/form-data
+      parameters:
+        - in: formData
+          name: uploadImages
+          type: file
+          description: upload files
+          required: true
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              type: string
   /api/authentication/login:
     post:
       tags:
@@ -91,6 +115,7 @@ paths:
           description: Car ads guid
           required: true
           type: string
+          format: uuid
       responses:
         '200':
           description: Success
@@ -106,9 +131,18 @@ paths:
       summary: Edit car ads
       description: Authorization required
       operationId: ApiCarByAdsIdPut
-      consumes: []
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
       produces: []
       parameters:
+        - name: carAds
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/CarEditAdsViewModel'
         - name: adsId
           in: path
           required: true
@@ -155,10 +189,6 @@ paths:
         - application/json
         - text/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
         - name: IncludeMakeIds
           in: query
           required: false
@@ -200,7 +230,7 @@ paths:
             - 1
             - 2
             - 3
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -232,32 +262,32 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: number
           format: float
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: number
@@ -280,7 +310,7 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -299,7 +329,7 @@ paths:
               - 8
               - 9
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -311,17 +341,17 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: CubicFrom
+        - name: CubicCapacityFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: CubicTo
+        - name: CubicCapacityTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: ExteriorColor
+        - name: Colors
           in: query
           required: false
           type: array
@@ -347,7 +377,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: Auxiliary
+        - name: AuxiliaryHeating
           in: query
           required: true
           type: boolean
@@ -395,7 +425,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: Mp3
+        - name: Mp3Interface
           in: query
           required: true
           type: boolean
@@ -431,7 +461,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: Tuner
+        - name: TunerOrRadio
           in: query
           required: true
           type: boolean
@@ -501,15 +531,15 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: Seats
+        - name: SportSeats
           in: query
           required: true
           type: boolean
-        - name: Package
+        - name: SportPackage
           in: query
           required: true
           type: boolean
-        - name: Suspension
+        - name: SportSuspension
           in: query
           required: true
           type: boolean
@@ -537,7 +567,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: InteriorDesigns
+        - name: InteriorDesignIds
           in: query
           required: false
           type: array
@@ -607,7 +637,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: NonSmoker
+        - name: NonSmokerVehicle
           in: query
           required: true
           type: boolean
@@ -623,12 +653,12 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: NumberOfOwnerUpTo
+        - name: NumberOfOwnersUpTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: SubCategories
+        - name: SubCategoryIds
           in: query
           required: false
           type: array
@@ -640,7 +670,21 @@ paths:
               - 2
               - 3
           collectionFormat: multi
-        - name: NewHU
+        - name: IsNew
+          in: query
+          required: false
+          type: boolean
+        - name: VehicleOrderBy
+          in: query
+          required: true
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        - name: IsDesc
           in: query
           required: true
           type: boolean
@@ -669,11 +713,49 @@ paths:
       summary: Post a new car ads
       description: Authorization required
       operationId: ApiCarPost
-      consumes: []
-      produces: []
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: carAds
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/CarPostAdsViewModel'
       responses:
-        '200':
-          description: Success
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorMessageViewModel'
+  '/api/car/edit-details/{adsId}':
+    get:
+      tags:
+        - CarAds
+      summary: Get car detail for edit
+      description: Authorization required
+      operationId: ApiCarEdit-detailsByAdsIdGet
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: adsId
+          in: path
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorMessageViewModel'
   /api/car/count:
     get:
       tags:
@@ -686,10 +768,6 @@ paths:
         - application/json
         - text/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
         - name: IncludeMakeIds
           in: query
           required: false
@@ -731,7 +809,7 @@ paths:
             - 1
             - 2
             - 3
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -763,32 +841,32 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: number
           format: float
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: number
@@ -811,7 +889,7 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -830,7 +908,7 @@ paths:
               - 8
               - 9
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -842,17 +920,17 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: CubicFrom
+        - name: CubicCapacityFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: CubicTo
+        - name: CubicCapacityTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: ExteriorColor
+        - name: Colors
           in: query
           required: false
           type: array
@@ -878,7 +956,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: Auxiliary
+        - name: AuxiliaryHeating
           in: query
           required: true
           type: boolean
@@ -926,7 +1004,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: Mp3
+        - name: Mp3Interface
           in: query
           required: true
           type: boolean
@@ -962,7 +1040,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: Tuner
+        - name: TunerOrRadio
           in: query
           required: true
           type: boolean
@@ -1032,15 +1110,15 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: Seats
+        - name: SportSeats
           in: query
           required: true
           type: boolean
-        - name: Package
+        - name: SportPackage
           in: query
           required: true
           type: boolean
-        - name: Suspension
+        - name: SportSuspension
           in: query
           required: true
           type: boolean
@@ -1068,7 +1146,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: InteriorDesigns
+        - name: InteriorDesignIds
           in: query
           required: false
           type: array
@@ -1138,7 +1216,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: NonSmoker
+        - name: NonSmokerVehicle
           in: query
           required: true
           type: boolean
@@ -1154,12 +1232,12 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: NumberOfOwnerUpTo
+        - name: NumberOfOwnersUpTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: SubCategories
+        - name: SubCategoryIds
           in: query
           required: false
           type: array
@@ -1171,7 +1249,21 @@ paths:
               - 2
               - 3
           collectionFormat: multi
-        - name: NewHU
+        - name: IsNew
+          in: query
+          required: false
+          type: boolean
+        - name: VehicleOrderBy
+          in: query
+          required: true
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        - name: IsDesc
           in: query
           required: true
           type: boolean
@@ -1199,11 +1291,7 @@ paths:
       parameters:
         - name: carAdsUpdateSavedSearchViewModel
           in: body
-          description: 'NotifyFrequency: 
-          Instantly = 1,
-          Daily = 2,
-          Weekly = 3,
-          Monthly = 4'
+          description: ''
           required: false
           schema:
             $ref: '#/definitions/CarAdsUpdateSavedSearchViewModel'
@@ -1234,11 +1322,7 @@ paths:
       parameters:
         - name: carAdsSaveSearchViewModel
           in: body
-          description: 'NotifyFrequency: 
-          Instantly = 1,
-          Daily = 2,
-          Weekly = 3,
-          Monthly = 4'
+          description: ''
           required: false
           schema:
             $ref: '#/definitions/CarAdsSaveSearchViewModel'
@@ -1392,6 +1476,37 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorMessageViewModel'
+  /api/favorite/list:
+    get:
+      tags:
+        - Favorite
+      summary: Get favorite items for not loged in user by ids
+      operationId: ApiFavoriteListGet
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: adsIds
+          in: query
+          required: false
+          type: array
+          items:
+            type: string
+            format: uuid
+          collectionFormat: multi
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/VehicleFavoriteAdViewModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorMessageViewModel'
   '/api/motorbike/{adsId}':
     get:
       tags:
@@ -1430,10 +1545,6 @@ paths:
         - application/json
         - text/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
         - name: IncludeMakeIds
           in: query
           required: false
@@ -1466,7 +1577,7 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -1495,32 +1606,32 @@ paths:
               - 18
               - 19
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: number
           format: float
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: number
@@ -1543,7 +1654,7 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -1568,7 +1679,7 @@ paths:
               - 2
               - 3
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -1580,17 +1691,17 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: CubicFrom
+        - name: CubicCapacityFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: CubicTo
+        - name: CubicCapacityTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: ExteriorColors
+        - name: Colors
           in: query
           required: false
           type: array
@@ -1661,11 +1772,29 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: NumberOfOwnerUpTo
+        - name: NumberOfOwnersUpTo
           in: query
           required: false
           type: integer
           format: int32
+        - name: IsNew
+          in: query
+          required: false
+          type: boolean
+        - name: VehicleOrderBy
+          in: query
+          required: true
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        - name: IsDesc
+          in: query
+          required: true
+          type: boolean
         - name: Page
           in: query
           required: true
@@ -1685,6 +1814,32 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorMessageViewModel'
+    post:
+      tags:
+        - MotorbikeAds
+      summary: Post a new motorbike ads
+      description: Authorization required
+      operationId: ApiMotorbikePost
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: motorbikeAds
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/MotorbikePostAdsViewModel'
+      responses:
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorMessageViewModel'
   /api/motorbike/count:
     get:
       tags:
@@ -1697,10 +1852,6 @@ paths:
         - application/json
         - text/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
         - name: IncludeMakeIds
           in: query
           required: false
@@ -1733,7 +1884,7 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -1762,32 +1913,32 @@ paths:
               - 18
               - 19
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: number
           format: float
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: number
@@ -1810,7 +1961,7 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -1835,7 +1986,7 @@ paths:
               - 2
               - 3
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -1847,17 +1998,17 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: CubicFrom
+        - name: CubicCapacityFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: CubicTo
+        - name: CubicCapacityTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: ExteriorColors
+        - name: Colors
           in: query
           required: false
           type: array
@@ -1928,11 +2079,29 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: NumberOfOwnerUpTo
+        - name: NumberOfOwnersUpTo
           in: query
           required: false
           type: integer
           format: int32
+        - name: IsNew
+          in: query
+          required: false
+          type: boolean
+        - name: VehicleOrderBy
+          in: query
+          required: true
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        - name: IsDesc
+          in: query
+          required: true
+          type: boolean
       responses:
         '200':
           description: Success
@@ -1972,11 +2141,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -2011,22 +2176,22 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: integer
@@ -2041,17 +2206,17 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -2068,7 +2233,7 @@ paths:
               - 6
               - 7
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -2080,7 +2245,7 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: ExteriorColor
+        - name: Colors
           in: query
           required: false
           type: array
@@ -2102,7 +2267,7 @@ paths:
               - 12
               - 13
           collectionFormat: multi
-        - name: NumberOfOwnerUpTo
+        - name: NumberOfOwnersUpTo
           in: query
           required: false
           type: integer
@@ -2111,7 +2276,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: DisableAccessible
+        - name: DisabledAccessible
           in: query
           required: true
           type: boolean
@@ -2313,6 +2478,24 @@ paths:
             - 1
             - 2
         - name: Metallic
+          in: query
+          required: true
+          type: boolean
+        - name: IsNew
+          in: query
+          required: false
+          type: boolean
+        - name: VehicleOrderBy
+          in: query
+          required: true
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        - name: IsDesc
           in: query
           required: true
           type: boolean
@@ -2341,11 +2524,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -2380,22 +2559,22 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: integer
@@ -2410,17 +2589,17 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -2437,7 +2616,7 @@ paths:
               - 6
               - 7
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -2449,7 +2628,7 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: ExteriorColor
+        - name: Colors
           in: query
           required: false
           type: array
@@ -2471,7 +2650,7 @@ paths:
               - 12
               - 13
           collectionFormat: multi
-        - name: NumberOfOwnerUpTo
+        - name: NumberOfOwnersUpTo
           in: query
           required: false
           type: integer
@@ -2480,7 +2659,7 @@ paths:
           in: query
           required: true
           type: boolean
-        - name: DisableAccessible
+        - name: DisabledAccessible
           in: query
           required: true
           type: boolean
@@ -2682,6 +2861,24 @@ paths:
             - 1
             - 2
         - name: Metallic
+          in: query
+          required: true
+          type: boolean
+        - name: IsNew
+          in: query
+          required: false
+          type: boolean
+        - name: VehicleOrderBy
+          in: query
+          required: true
+          type: integer
+          format: int32
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        - name: IsDesc
           in: query
           required: true
           type: boolean
@@ -2764,11 +2961,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -2824,22 +3017,22 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: integer
@@ -2854,17 +3047,17 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -2881,7 +3074,7 @@ paths:
               - 6
               - 7
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -2893,7 +3086,7 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: ExteriorColor
+        - name: Colors
           in: query
           required: false
           type: array
@@ -3067,6 +3260,10 @@ paths:
         - name: Metallic
           in: query
           required: true
+          type: boolean
+        - name: IsNew
+          in: query
+          required: false
           type: boolean
         - name: page
           in: query
@@ -3093,11 +3290,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -3153,22 +3346,22 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: integer
@@ -3183,17 +3376,17 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -3210,7 +3403,7 @@ paths:
               - 6
               - 7
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -3222,7 +3415,7 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: ExteriorColor
+        - name: Colors
           in: query
           required: false
           type: array
@@ -3397,6 +3590,10 @@ paths:
           in: query
           required: true
           type: boolean
+        - name: IsNew
+          in: query
+          required: false
+          type: boolean
       responses:
         '200':
           description: Success
@@ -3416,11 +3613,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -3474,22 +3667,22 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: integer
@@ -3504,17 +3697,17 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -3531,7 +3724,7 @@ paths:
               - 6
               - 7
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -3543,7 +3736,7 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: ExteriorColor
+        - name: Colors
           in: query
           required: false
           type: array
@@ -3748,6 +3941,10 @@ paths:
         - name: Metallic
           in: query
           required: true
+          type: boolean
+        - name: IsNew
+          in: query
+          required: false
           type: boolean
         - name: page
           in: query
@@ -3774,11 +3971,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -3832,22 +4025,22 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: integer
@@ -3862,17 +4055,17 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: Fuels
+        - name: FuelIds
           in: query
           required: false
           type: array
@@ -3889,7 +4082,7 @@ paths:
               - 6
               - 7
           collectionFormat: multi
-        - name: Gearboxs
+        - name: GearboxIds
           in: query
           required: false
           type: array
@@ -3901,7 +4094,7 @@ paths:
               - 1
               - 2
           collectionFormat: multi
-        - name: ExteriorColor
+        - name: Colors
           in: query
           required: false
           type: array
@@ -4107,6 +4300,10 @@ paths:
           in: query
           required: true
           type: boolean
+        - name: IsNew
+          in: query
+          required: false
+          type: boolean
       responses:
         '200':
           description: Success
@@ -4126,11 +4323,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -4184,22 +4377,22 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: integer
@@ -4214,12 +4407,12 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
@@ -4290,6 +4483,10 @@ paths:
         - name: RentingPossible
           in: query
           required: true
+          type: boolean
+        - name: IsNew
+          in: query
+          required: false
           type: boolean
         - name: page
           in: query
@@ -4316,11 +4513,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: Categories
+        - name: CategoryIds
           in: query
           required: false
           type: array
@@ -4374,22 +4567,22 @@ paths:
             type: integer
             format: int32
           collectionFormat: multi
-        - name: FirstYearRegistrationFrom
+        - name: FirstRegistrationYearFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: FirstYearRegistrationTo
+        - name: FirstRegistrationYearTo
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceFrom
+        - name: MainPriceFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: PriceTo
+        - name: MainPriceTo
           in: query
           required: false
           type: integer
@@ -4404,12 +4597,12 @@ paths:
           required: false
           type: integer
           format: int32
-        - name: KilometerFrom
+        - name: MileageFrom
           in: query
           required: false
           type: integer
           format: int32
-        - name: KilometerTo
+        - name: MileageTo
           in: query
           required: false
           type: integer
@@ -4480,6 +4673,10 @@ paths:
         - name: RentingPossible
           in: query
           required: true
+          type: boolean
+        - name: IsNew
+          in: query
+          required: false
           type: boolean
       responses:
         '200':
@@ -4868,28 +5065,18 @@ paths:
       summary: delete a saved search from current user
       description: Authorization required.
       operationId: ApiVehicle-adsSearchByIdDelete
-      consumes:
-        - application/json-patch+json
-        - application/json
-        - text/json
-        - application/*+json
+      consumes: []
       produces:
         - text/plain
         - application/json
         - text/json
       parameters:
         - name: id
-          in: body
-          description: saved search id
-          required: false
-          schema:
-            format: uuid
-            type: string
-        - name: id
           in: path
           description: saved search id
           required: true
           type: string
+          format: uuid
       responses:
         '200':
           description: Success
@@ -4995,7 +5182,7 @@ definitions:
       numberOfSeats:
         format: int32
         type: integer
-      doorCount:
+      numberOfDoors:
         type: string
       cO2EmissionsComb:
         format: float
@@ -5014,11 +5201,9 @@ definitions:
       emissionSticker:
         format: int32
         type: integer
-      numberOfVehicleOwner:
+      numberOfOwners:
         format: int32
         type: integer
-      manufacturerColor:
-        type: string
       interiorDesign:
         type: string
       auxiliaryHeating:
@@ -5029,7 +5214,7 @@ definitions:
         type: boolean
       centralLocking:
         type: boolean
-      climatisation:
+      airConditioning:
         type: string
       cruiseControl:
         type: boolean
@@ -5091,7 +5276,7 @@ definitions:
         type: boolean
       adaptiveLighting:
         type: boolean
-      airbags:
+      airbag:
         type: string
       daytimeRunningLights:
         type: boolean
@@ -5154,7 +5339,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -5191,6 +5376,301 @@ definitions:
         format: float
         type: number
       isAccidentVehicle:
+        type: boolean
+  CarEditAdsViewModel:
+    type: object
+    properties:
+      roadWorthy:
+        type: boolean
+      numberOfSeats:
+        format: int32
+        type: integer
+      numberOfDoors:
+        format: int32
+        type: integer
+      cO2EmissionsComb:
+        format: float
+        type: number
+      fuelConsumptionUrban:
+        format: float
+        type: number
+      fuelConsumptionExtraUrban:
+        format: float
+        type: number
+      fuelConsumptionComb:
+        format: float
+        type: number
+      emissionClass:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+        type: integer
+      emissionSticker:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+        type: integer
+      numberOfOwners:
+        format: int32
+        type: integer
+      interiorColor:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+        type: integer
+      interiorDesignId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+        type: integer
+      metallic:
+        type: boolean
+      categoryId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+        type: integer
+      subCategoryId:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+        type: integer
+      fuelId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+        type: integer
+      auxiliaryHeating:
+        type: boolean
+      bluetooth:
+        type: boolean
+      cdPlayer:
+        type: boolean
+      centralLocking:
+        type: boolean
+      airConditioning:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+        type: integer
+      cruiseControl:
+        type: boolean
+      electricHeatedSeats:
+        type: boolean
+      electricSeatAdjustment:
+        type: boolean
+      electricWindows:
+        type: boolean
+      handsFreeKit:
+        type: boolean
+      headupDisplay:
+        type: boolean
+      mP3Interface:
+        type: boolean
+      multifunctionSteeringWheel:
+        type: boolean
+      navigationSystem:
+        type: boolean
+      onboardComputer:
+        type: boolean
+      panoramicRoof:
+        type: boolean
+      parkingSensorCamera:
+        type: boolean
+      parkingSensorFront:
+        type: boolean
+      parkingSensorRear:
+        type: boolean
+      parkingSensorSelfSteeringSystem:
+        type: boolean
+      powerAssistedSteering:
+        type: boolean
+      skiBag:
+        type: boolean
+      sportSeats:
+        type: boolean
+      sunroof:
+        type: boolean
+      tunerOrRadio:
+        type: boolean
+      alloyWheels:
+        type: boolean
+      electricSideMirror:
+        type: boolean
+      roofRack:
+        type: boolean
+      sportsPackage:
+        type: boolean
+      sportsSuspension:
+        type: boolean
+      trailerCoupling:
+        type: boolean
+      disabledAccessible:
+        type: boolean
+      fullServiceHistory:
+        type: boolean
+      nonSmokerVehicle:
+        type: boolean
+      taxi:
+        type: boolean
+      warranty:
+        type: boolean
+      abs:
+        type: boolean
+      adaptiveLighting:
+        type: boolean
+      airbag:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+        type: integer
+      daytimeRunningLights:
+        type: boolean
+      esp:
+        type: boolean
+      fogLamp:
+        type: boolean
+      fourWheelDrive:
+        type: boolean
+      immobilizer:
+        type: boolean
+      isofix:
+        type: boolean
+      lightSensor:
+        type: boolean
+      particulateFilter:
+        type: boolean
+      rainSensor:
+        type: boolean
+      startStopSystem:
+        type: boolean
+      tractionControl:
+        type: boolean
+      xenonHeadlights:
+        type: boolean
+      id:
+        format: uuid
+        type: string
+      title:
+        type: string
+      seoName:
+        type: string
+      address:
+        type: string
+      status:
+        type: string
+      make:
+        type: string
+      model:
+        type: string
+      firstRegistrationMonth:
+        format: int32
+        type: integer
+      firstRegistrationYear:
+        format: int32
+        type: integer
+      mileage:
+        format: int32
+        type: integer
+      power:
+        format: int32
+        type: integer
+      gearboxId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+        type: integer
+      isDamaged:
+        type: boolean
+      mainPrice:
+        format: float
+        type: number
+      canNegotiate:
+        type: boolean
+      otherDescription:
+        type: string
+      type:
+        type: string
+      color:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+        type: integer
+      vehicleInspectionValidUntilMonth:
+        format: int32
+        type: integer
+      vehicleInspectionValidUntilYear:
+        format: int32
+        type: integer
+      approvedUserProgramme:
+        type: string
+      imageURLs:
+        type: array
+        items:
+          type: string
+      vehicleNumber:
+        type: string
+      cubicCapacity:
+        format: float
+        type: number
+      isAccidentVehicle:
+        type: boolean
+      isSecondHand:
         type: boolean
   VehicleAdsListViewModel:
     type: object
@@ -5245,7 +5725,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -5283,6 +5763,301 @@ definitions:
         type: number
       isAccidentVehicle:
         type: boolean
+  CarPostAdsViewModel:
+    type: object
+    properties:
+      roadWorthy:
+        type: boolean
+      numberOfSeats:
+        format: int32
+        type: integer
+      numberOfDoors:
+        format: int32
+        type: integer
+      cO2EmissionsComb:
+        format: float
+        type: number
+      fuelConsumptionUrban:
+        format: float
+        type: number
+      fuelConsumptionExtraUrban:
+        format: float
+        type: number
+      fuelConsumptionComb:
+        format: float
+        type: number
+      emissionClass:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+        type: integer
+      emissionSticker:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+        type: integer
+      interiorColor:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+        type: integer
+      categoryId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+        type: integer
+      interiorDesignId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+        type: integer
+      subCategoryId:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+        type: integer
+      fuelId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+        type: integer
+      auxiliaryHeating:
+        type: boolean
+      bluetooth:
+        type: boolean
+      cdPlayer:
+        type: boolean
+      centralLocking:
+        type: boolean
+      airConditioning:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+        type: integer
+      cruiseControl:
+        type: boolean
+      electricHeatedSeats:
+        type: boolean
+      electricSeatAdjustment:
+        type: boolean
+      electricWindows:
+        type: boolean
+      handsFreeKit:
+        type: boolean
+      headupDisplay:
+        type: boolean
+      mP3Interface:
+        type: boolean
+      multifunctionSteeringWheel:
+        type: boolean
+      navigationSystem:
+        type: boolean
+      onboardComputer:
+        type: boolean
+      panoramicRoof:
+        type: boolean
+      parkingSensorCamera:
+        type: boolean
+      parkingSensorFront:
+        type: boolean
+      parkingSensorRear:
+        type: boolean
+      parkingSensorSelfSteeringSystem:
+        type: boolean
+      powerAssistedSteering:
+        type: boolean
+      skiBag:
+        type: boolean
+      sportSeats:
+        type: boolean
+      sunroof:
+        type: boolean
+      tunerOrRadio:
+        type: boolean
+      alloyWheels:
+        type: boolean
+      electricSideMirror:
+        type: boolean
+      roofRack:
+        type: boolean
+      sportsPackage:
+        type: boolean
+      sportsSuspension:
+        type: boolean
+      trailerCoupling:
+        type: boolean
+      disabledAccessible:
+        type: boolean
+      fullServiceHistory:
+        type: boolean
+      nonSmokerVehicle:
+        type: boolean
+      taxi:
+        type: boolean
+      warranty:
+        type: boolean
+      abs:
+        type: boolean
+      adaptiveLighting:
+        type: boolean
+      airbag:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+        type: integer
+      daytimeRunningLights:
+        type: boolean
+      esp:
+        type: boolean
+      fogLamp:
+        type: boolean
+      fourWheelDrive:
+        type: boolean
+      immobilizer:
+        type: boolean
+      isofix:
+        type: boolean
+      lightSensor:
+        type: boolean
+      particulateFilter:
+        type: boolean
+      rainSensor:
+        type: boolean
+      startStopSystem:
+        type: boolean
+      tractionControl:
+        type: boolean
+      xenonHeadlights:
+        type: boolean
+      creatorId:
+        format: uuid
+        type: string
+      title:
+        type: string
+      seoName:
+        type: string
+      address:
+        type: string
+      status:
+        type: string
+      make:
+        type: string
+      model:
+        type: string
+      firstRegistrationMonth:
+        format: int32
+        type: integer
+      firstRegistrationYear:
+        format: int32
+        type: integer
+      metallic:
+        type: boolean
+      mileage:
+        format: int32
+        type: integer
+      power:
+        format: int32
+        type: integer
+      gearboxId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+        type: integer
+      numberOfOwners:
+        format: int32
+        type: integer
+      isDamaged:
+        type: boolean
+      mainPrice:
+        format: float
+        type: number
+      canNegotiate:
+        type: boolean
+      otherDescription:
+        type: string
+      type:
+        type: string
+      color:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+        type: integer
+      vehicleInspectionValidUntilMonth:
+        format: int32
+        type: integer
+      vehicleInspectionValidUntilYear:
+        format: int32
+        type: integer
+      approvedUserProgramme:
+        type: string
+      imageURLs:
+        type: array
+        items:
+          type: string
+      vehicleNumber:
+        type: string
+      cubicCapacity:
+        format: float
+        type: number
+      isAccidentVehicle:
+        type: boolean
+      isSecondHand:
+        type: boolean
   ItemCountViewModel:
     type: object
     properties:
@@ -5310,8 +6085,6 @@ definitions:
   CarAdvancedSearchQuery:
     type: object
     properties:
-      isNew:
-        type: boolean
       includeMakeIds:
         type: array
         items:
@@ -5339,7 +6112,7 @@ definitions:
           - 2
           - 3
         type: integer
-      categories:
+      categoryIds:
         type: array
         items:
           format: int32
@@ -5362,22 +6135,22 @@ definitions:
       numberOfDoors:
         format: int32
         type: integer
-      firstYearRegistrationFrom:
+      firstRegistrationYearFrom:
         format: int32
         type: integer
-      firstYearRegistrationTo:
+      firstRegistrationYearTo:
         format: int32
         type: integer
-      kilometerFrom:
+      mileageFrom:
         format: int32
         type: integer
-      kilometerTo:
+      mileageTo:
         format: int32
         type: integer
-      priceFrom:
+      mainPriceFrom:
         format: float
         type: number
-      priceTo:
+      mainPriceTo:
         format: float
         type: number
       powerUnit:
@@ -5392,7 +6165,7 @@ definitions:
       powerTo:
         format: int32
         type: integer
-      fuels:
+      fuelIds:
         type: array
         items:
           format: int32
@@ -5408,7 +6181,7 @@ definitions:
             - 8
             - 9
           type: integer
-      gearboxs:
+      gearboxIds:
         type: array
         items:
           format: int32
@@ -5417,13 +6190,13 @@ definitions:
             - 1
             - 2
           type: integer
-      cubicFrom:
+      cubicCapacityFrom:
         format: int32
         type: integer
-      cubicTo:
+      cubicCapacityTo:
         format: int32
         type: integer
-      exteriorColor:
+      colors:
         type: array
         items:
           format: int32
@@ -5444,7 +6217,7 @@ definitions:
           type: integer
       metallic:
         type: boolean
-      auxiliary:
+      auxiliaryHeating:
         type: boolean
       bluetooth:
         type: boolean
@@ -5468,7 +6241,7 @@ definitions:
         type: boolean
       isofix:
         type: boolean
-      mp3:
+      mp3Interface:
         type: boolean
       multifunctionSteeringWheel:
         type: boolean
@@ -5486,7 +6259,7 @@ definitions:
         type: boolean
       sunroof:
         type: boolean
-      tuner:
+      tunerOrRadio:
         type: boolean
       abs:
         type: boolean
@@ -5524,11 +6297,11 @@ definitions:
         type: boolean
       selfSteeringSystem:
         type: boolean
-      seats:
+      sportSeats:
         type: boolean
-      package:
+      sportPackage:
         type: boolean
-      suspension:
+      sportSuspension:
         type: boolean
       alloyWheels:
         type: boolean
@@ -5542,7 +6315,7 @@ definitions:
         type: boolean
       trailerCoupling:
         type: boolean
-      interiorDesigns:
+      interiorDesignIds:
         type: array
         items:
           format: int32
@@ -5594,7 +6367,7 @@ definitions:
         type: integer
       fullServiceHistory:
         type: boolean
-      nonSmoker:
+      nonSmokerVehicle:
         type: boolean
       warranty:
         type: boolean
@@ -5602,10 +6375,10 @@ definitions:
         type: boolean
       isDamaged:
         type: boolean
-      numberOfOwnerUpTo:
+      numberOfOwnersUpTo:
         format: int32
         type: integer
-      subCategories:
+      subCategoryIds:
         type: array
         items:
           format: int32
@@ -5614,7 +6387,17 @@ definitions:
             - 2
             - 3
           type: integer
-      newHU:
+      isNew:
+        type: boolean
+      vehicleOrderBy:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+        type: integer
+      isDesc:
         type: boolean
   CarAdsUpdateSavedSearchViewModel:
     required:
@@ -5642,8 +6425,8 @@ definitions:
       name:
         type: string
       id:
-        type: integer
         format: int32
+        type: integer
       models:
         type: array
         items:
@@ -5654,22 +6437,22 @@ definitions:
       name:
         type: string
       id:
-        type: integer
         format: int32
+        type: integer
   VehicleUserFavoriteAdsViewModel:
     type: object
     properties:
+      note:
+        type: string
+      favoriteTime:
+        format: date-time
+        type: string
       longitude:
         format: double
         type: number
       latitude:
         format: double
         type: number
-      note:
-        type: string
-      favoriteTime:
-        format: date-time
-        type: string
       isDeleted:
         type: boolean
       id:
@@ -5709,7 +6492,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -5774,14 +6557,100 @@ definitions:
       note:
         maxLength: 255
         type: string
+  VehicleFavoriteAdViewModel:
+    type: object
+    properties:
+      longitude:
+        format: double
+        type: number
+      latitude:
+        format: double
+        type: number
+      isDeleted:
+        type: boolean
+      id:
+        format: uuid
+        type: string
+      title:
+        type: string
+      seoName:
+        type: string
+      views:
+        format: int32
+        type: integer
+      postedTime:
+        format: date-time
+        type: string
+      isFavorite:
+        type: boolean
+      address:
+        type: string
+      status:
+        type: string
+      make:
+        type: string
+      model:
+        type: string
+      firstRegistration:
+        type: string
+      category:
+        type: string
+      subCategory:
+        type: string
+      imageLink:
+        type: string
+      mileage:
+        format: int32
+        type: integer
+      power:
+        format: int32
+        type: integer
+      gearbox:
+        type: string
+      isDamaged:
+        type: boolean
+      fuel:
+        type: string
+      mainPrice:
+        format: float
+        type: number
+      alternativePrice:
+        format: float
+        type: number
+      canNegotiate:
+        type: boolean
+      otherDescription:
+        type: string
+      type:
+        type: string
+      relativeURL:
+        type: string
+        readOnly: true
+      color:
+        type: string
+      vehicleInspectionValidUntil:
+        type: string
+      approvedUserProgramme:
+        type: string
+      imageURLs:
+        type: array
+        items:
+          type: string
+      vehicleNumber:
+        type: string
+      cubicCapacity:
+        format: float
+        type: number
+      isAccidentVehicle:
+        type: boolean
   MotorbikeAdsViewModel:
     type: object
     properties:
       drivingMode:
         type: string
-      electricStater:
+      electricStarter:
         type: boolean
-      kickstater:
+      kickstarter:
         type: boolean
       box:
         type: boolean
@@ -5834,7 +6703,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -5872,6 +6741,160 @@ definitions:
         type: number
       isAccidentVehicle:
         type: boolean
+  MotorbikePostAdsViewModel:
+    type: object
+    properties:
+      electricStarter:
+        type: boolean
+      kickstarter:
+        type: boolean
+      drivingModeId:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+        type: integer
+      categoryId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+          - 14
+          - 15
+          - 16
+          - 17
+          - 18
+          - 19
+        type: integer
+      subCategoryId:
+        format: int32
+        enum:
+          - 1
+          - 2
+        type: integer
+      fuelId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+        type: integer
+      box:
+        type: boolean
+      windshield:
+        type: boolean
+      abs:
+        type: boolean
+      catalyticConverter:
+        type: boolean
+      rollOverBar:
+        type: boolean
+      disabledConversation:
+        type: boolean
+      fullServiceHistory:
+        type: boolean
+      creatorId:
+        format: uuid
+        type: string
+      title:
+        type: string
+      seoName:
+        type: string
+      address:
+        type: string
+      status:
+        type: string
+      make:
+        type: string
+      model:
+        type: string
+      firstRegistrationMonth:
+        format: int32
+        type: integer
+      firstRegistrationYear:
+        format: int32
+        type: integer
+      metallic:
+        type: boolean
+      mileage:
+        format: int32
+        type: integer
+      power:
+        format: int32
+        type: integer
+      gearboxId:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+        type: integer
+      numberOfOwners:
+        format: int32
+        type: integer
+      isDamaged:
+        type: boolean
+      mainPrice:
+        format: float
+        type: number
+      canNegotiate:
+        type: boolean
+      otherDescription:
+        type: string
+      type:
+        type: string
+      color:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+          - 8
+          - 9
+          - 10
+          - 11
+          - 12
+          - 13
+        type: integer
+      vehicleInspectionValidUntilMonth:
+        format: int32
+        type: integer
+      vehicleInspectionValidUntilYear:
+        format: int32
+        type: integer
+      approvedUserProgramme:
+        type: string
+      imageURLs:
+        type: array
+        items:
+          type: string
+      vehicleNumber:
+        type: string
+      cubicCapacity:
+        format: float
+        type: number
+      isAccidentVehicle:
+        type: boolean
+      isSecondHand:
+        type: boolean
   MotorhomeAdsViewModel:
     type: object
     properties:
@@ -5886,7 +6909,7 @@ definitions:
       emissionSticker:
         format: int32
         type: integer
-      numberOfVehicleOwner:
+      numberOfOwners:
         format: int32
         type: integer
       axles:
@@ -5901,7 +6924,7 @@ definitions:
       vehicleHeight:
         format: int32
         type: integer
-      climatisation:
+      airConditioning:
         type: string
       parkingSensors:
         type: boolean
@@ -5998,7 +7021,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -6076,7 +7099,7 @@ definitions:
       loadingSpaceHeight:
         format: int32
         type: integer
-      climatisation:
+      airConditioning:
         type: string
       navigationSystem:
         type: boolean
@@ -6151,7 +7174,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -6229,7 +7252,7 @@ definitions:
       loadingSpaceHeight:
         format: int32
         type: integer
-      climatisation:
+      airConditioning:
         type: string
       axles:
         format: int32
@@ -6313,7 +7336,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -6367,7 +7390,7 @@ definitions:
         type: integer
       drivingCap:
         type: string
-      climatisation:
+      airConditioning:
         type: string
       axles:
         format: int32
@@ -6447,7 +7470,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -6574,7 +7597,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -6697,7 +7720,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -6749,7 +7772,7 @@ definitions:
       emissionSticker:
         format: int32
         type: integer
-      climatisation:
+      airConditioning:
         type: string
       driverSleepingCompartment:
         type: boolean
@@ -6824,7 +7847,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -6874,7 +7897,7 @@ definitions:
       emissionsSticker:
         format: int32
         type: integer
-      climatisation:
+      airConditioning:
         type: string
       cabin:
         type: boolean
@@ -6935,7 +7958,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -6991,7 +8014,7 @@ definitions:
       liftingCapacityHeight:
         format: int32
         type: integer
-      climatisation:
+      airConditioning:
         type: string
       cabin:
         type: boolean
@@ -7042,7 +8065,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -7147,7 +8170,7 @@ definitions:
       power:
         format: int32
         type: integer
-      gearBox:
+      gearbox:
         type: string
       isDamaged:
         type: boolean
@@ -7264,6 +8287,9 @@ definitions:
   VehicleAdsSavedSearchViewModel:
     type: object
     properties:
+      id:
+        format: uuid
+        type: string
       name:
         type: string
       criteria:
@@ -7278,12 +8304,20 @@ definitions:
           - 3
           - 4
         type: integer
-      id:
-        format: uuid
-        type: string
   VehicleAdsAdvancedSearchQuery:
     type: object
-    properties: {}
+    properties:
+      isNew:
+        type: boolean
+      vehicleOrderBy:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+        type: integer
+      isDesc:
+        type: boolean
 securityDefinitions: {}
 security: []
-
