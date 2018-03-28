@@ -32,7 +32,7 @@ paths:
       summary: upload a list of image
       operationId: ApiImagePost
       consumes:
-         - multipart/form-data
+        - multipart/form-data
       parameters:
         - in: formData
           name: uploadImages
@@ -337,9 +337,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: CubicCapacityFrom
           in: query
@@ -916,9 +916,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: CubicCapacityFrom
           in: query
@@ -1687,9 +1687,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: CubicCapacityFrom
           in: query
@@ -1994,9 +1994,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: CubicCapacityFrom
           in: query
@@ -2241,9 +2241,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: Colors
           in: query
@@ -2624,9 +2624,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: Colors
           in: query
@@ -3082,9 +3082,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: Colors
           in: query
@@ -3411,9 +3411,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: Colors
           in: query
@@ -3732,9 +3732,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: Colors
           in: query
@@ -4090,9 +4090,9 @@ paths:
             type: integer
             format: int32
             enum:
-              - 0
               - 1
               - 2
+              - 3
           collectionFormat: multi
         - name: Colors
           in: query
@@ -4875,7 +4875,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/VehicleAdsListViewModel'
+            $ref: '#/definitions/MyAdsViewModel'
         '400':
           description: Bad Request
           schema:
@@ -5594,6 +5594,8 @@ definitions:
         type: string
       title:
         type: string
+      type:
+        type: string
       seoName:
         type: string
       address:
@@ -5619,9 +5621,9 @@ definitions:
       gearboxId:
         format: int32
         enum:
-          - 0
           - 1
           - 2
+          - 3
         type: integer
       isDamaged:
         type: boolean
@@ -5631,8 +5633,6 @@ definitions:
       canNegotiate:
         type: boolean
       otherDescription:
-        type: string
-      type:
         type: string
       color:
         format: int32
@@ -6002,9 +6002,9 @@ definitions:
       gearboxId:
         format: int32
         enum:
-          - 0
           - 1
           - 2
+          - 3
         type: integer
       numberOfOwners:
         format: int32
@@ -6186,9 +6186,9 @@ definitions:
         items:
           format: int32
           enum:
-            - 0
             - 1
             - 2
+            - 3
           type: integer
       cubicCapacityFrom:
         format: int32
@@ -6839,9 +6839,9 @@ definitions:
       gearboxId:
         format: int32
         enum:
-          - 0
           - 1
           - 2
+          - 3
         type: integer
       numberOfOwners:
         format: int32
@@ -8239,6 +8239,33 @@ definitions:
       email:
         type: string
       avatarUrl:
+        type: string
+  MyAdsViewModel:
+    type: object
+    properties:
+      id:
+        format: uuid
+        type: string
+      title:
+        type: string
+      mainPrice:
+        format: float
+        type: number
+      alternativePrice:
+        format: float
+        type: number
+      viewCount:
+        format: int32
+        type: integer
+      favoriteCount:
+        format: int32
+        type: integer
+      imageLink:
+        type: string
+      relativeURL:
+        type: string
+        readOnly: true
+      type:
         type: string
   SendEmailToSellerViewModel:
     required:
