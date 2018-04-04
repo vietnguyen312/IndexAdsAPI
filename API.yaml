@@ -31,14 +31,7 @@ paths:
         - AdsImage
       summary: upload a list of image
       operationId: ApiImagePost
-      consumes:
-        - multipart/form-data
-      parameters:
-        - in: formData
-          name: uploadImages
-          type: file
-          description: upload files
-          required: true
+      consumes: []
       produces:
         - text/plain
         - application/json
@@ -340,6 +333,7 @@ paths:
               - 1
               - 2
               - 3
+              - 4
           collectionFormat: multi
         - name: CubicCapacityFrom
           in: query
@@ -515,19 +509,19 @@ paths:
             - 2
             - 3
             - 4
-        - name: Rear
+        - name: ParkingSensorRear
           in: query
           required: true
           type: boolean
-        - name: Front
+        - name: ParkingSensorFront
           in: query
           required: true
           type: boolean
-        - name: Camera
+        - name: ParkingSensorCamera
           in: query
           required: true
           type: boolean
-        - name: SelfSteeringSystem
+        - name: ParkingSensorSelfSteeringSystem
           in: query
           required: true
           type: boolean
@@ -919,6 +913,7 @@ paths:
               - 1
               - 2
               - 3
+              - 4
           collectionFormat: multi
         - name: CubicCapacityFrom
           in: query
@@ -1094,19 +1089,19 @@ paths:
             - 2
             - 3
             - 4
-        - name: Rear
+        - name: ParkingSensorRear
           in: query
           required: true
           type: boolean
-        - name: Front
+        - name: ParkingSensorFront
           in: query
           required: true
           type: boolean
-        - name: Camera
+        - name: ParkingSensorCamera
           in: query
           required: true
           type: boolean
-        - name: SelfSteeringSystem
+        - name: ParkingSensorSelfSteeringSystem
           in: query
           required: true
           type: boolean
@@ -1352,7 +1347,61 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/VehicleMakeViewModel'
+              $ref: '#/definitions/MakeViewModel'
+  '/api/commercial-vehicle/{adsId}':
+    get:
+      tags:
+        - CommercialVehicleAds
+      summary: get detail of a commercial vehicle ads
+      operationId: ApiCommercial-vehicleByAdsIdGet
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: adsId
+          in: path
+          description: ''
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/CommercialVehicleAdsViewModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorMessageViewModel'
+  '/api/construction-vehicle/{adsId}':
+    get:
+      tags:
+        - ConstructionVehicleAds
+      summary: Get detail view of construction vehicle
+      operationId: ApiConstruction-vehicleByAdsIdGet
+      consumes: []
+      produces:
+        - text/plain
+        - application/json
+        - text/json
+      parameters:
+        - name: adsId
+          in: path
+          description: Cconstruction vehicle ads guid
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ConstructionVehicleAdsViewModel'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorMessageViewModel'
   /api/favorite:
     get:
       tags:
@@ -1690,6 +1739,7 @@ paths:
               - 1
               - 2
               - 3
+              - 4
           collectionFormat: multi
         - name: CubicCapacityFrom
           in: query
@@ -1997,6 +2047,7 @@ paths:
               - 1
               - 2
               - 3
+              - 4
           collectionFormat: multi
         - name: CubicCapacityFrom
           in: query
@@ -2107,2586 +2158,6 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/ItemCountViewModel'
-  '/api/motorhome/{adsId}':
-    get:
-      tags:
-        - MotorhomeAds
-      summary: get detail of a motorhome ad by id
-      operationId: ApiMotorhomeByAdsIdGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: adsId
-          in: path
-          description: motorhome guid
-          required: true
-          type: string
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/MotorhomeAdsViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
-  /api/motorhome:
-    get:
-      tags:
-        - MotorhomeAds
-      summary: motorhome ad advance search
-      operationId: ApiMotorhomeGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: CategoryIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-          collectionFormat: multi
-        - name: IncludeMakeIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: IncludeModelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: FirstRegistrationYearFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FirstRegistrationYearTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FuelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-          collectionFormat: multi
-        - name: GearboxIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-          collectionFormat: multi
-        - name: Colors
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-          collectionFormat: multi
-        - name: NumberOfOwnersUpTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: Awning
-          in: query
-          required: true
-          type: boolean
-        - name: DisabledAccessible
-          in: query
-          required: true
-          type: boolean
-        - name: ParkingSensors
-          in: query
-          required: true
-          type: boolean
-        - name: RearGarage
-          in: query
-          required: true
-          type: boolean
-        - name: SolarEnergySystem
-          in: query
-          required: true
-          type: boolean
-        - name: TrailerCoupling
-          in: query
-          required: true
-          type: boolean
-        - name: VehicleLengthFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: VehicleLengthTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: NumberOfBunksFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: NumberOfBunksTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissibleGVWFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissibleGVWTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: Axles
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: AirConditioning
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-        - name: AuxiliaryHeating
-          in: query
-          required: true
-          type: boolean
-        - name: Bed
-          in: query
-          required: true
-          type: boolean
-        - name: BunkBed
-          in: query
-          required: true
-          type: boolean
-        - name: CentralLocking
-          in: query
-          required: true
-          type: boolean
-        - name: CircularSeatingArrangement
-          in: query
-          required: true
-          type: boolean
-        - name: CruiseControl
-          in: query
-          required: true
-          type: boolean
-        - name: ElectricHeatedSeats
-          in: query
-          required: true
-          type: boolean
-        - name: MiddleSeatingArrangement
-          in: query
-          required: true
-          type: boolean
-        - name: NavigationSystem
-          in: query
-          required: true
-          type: boolean
-        - name: PowerAssistedSteering
-          in: query
-          required: true
-          type: boolean
-        - name: SecondaryAirConditioning
-          in: query
-          required: true
-          type: boolean
-        - name: SeparateShower
-          in: query
-          required: true
-          type: boolean
-        - name: SideSeatingArrangement
-          in: query
-          required: true
-          type: boolean
-        - name: TV
-          in: query
-          required: true
-          type: boolean
-        - name: WC
-          in: query
-          required: true
-          type: boolean
-        - name: EmissionClassFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-            - 5
-            - 6
-        - name: EmissionStickerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: ABS
-          in: query
-          required: true
-          type: boolean
-        - name: ESP
-          in: query
-          required: true
-          type: boolean
-        - name: FourWheelDrive
-          in: query
-          required: true
-          type: boolean
-        - name: ParticulateFilter
-          in: query
-          required: true
-          type: boolean
-        - name: OnlineSince
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: IsDamaged
-          in: query
-          required: true
-          type: boolean
-        - name: Warranty
-          in: query
-          required: true
-          type: boolean
-        - name: WithPicture
-          in: query
-          required: true
-          type: boolean
-        - name: FullServiceHistory
-          in: query
-          required: true
-          type: boolean
-        - name: RentingPossible
-          in: query
-          required: true
-          type: boolean
-        - name: PowerUnit
-          in: query
-          required: true
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-        - name: Metallic
-          in: query
-          required: true
-          type: boolean
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: VehicleOrderBy
-          in: query
-          required: true
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: IsDesc
-          in: query
-          required: true
-          type: boolean
-        - name: page
-          in: query
-          description: search result page
-          required: true
-          type: integer
-          format: int32
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/VehicleAdsListViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
-  /api/motorhome/count:
-    get:
-      tags:
-        - MotorhomeAds
-      summary: get motorhome ad advance search result count
-      operationId: ApiMotorhomeCountGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: CategoryIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-          collectionFormat: multi
-        - name: IncludeMakeIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: IncludeModelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: FirstRegistrationYearFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FirstRegistrationYearTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FuelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-          collectionFormat: multi
-        - name: GearboxIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-          collectionFormat: multi
-        - name: Colors
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-          collectionFormat: multi
-        - name: NumberOfOwnersUpTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: Awning
-          in: query
-          required: true
-          type: boolean
-        - name: DisabledAccessible
-          in: query
-          required: true
-          type: boolean
-        - name: ParkingSensors
-          in: query
-          required: true
-          type: boolean
-        - name: RearGarage
-          in: query
-          required: true
-          type: boolean
-        - name: SolarEnergySystem
-          in: query
-          required: true
-          type: boolean
-        - name: TrailerCoupling
-          in: query
-          required: true
-          type: boolean
-        - name: VehicleLengthFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: VehicleLengthTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: NumberOfBunksFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: NumberOfBunksTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissibleGVWFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissibleGVWTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: Axles
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: AirConditioning
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-        - name: AuxiliaryHeating
-          in: query
-          required: true
-          type: boolean
-        - name: Bed
-          in: query
-          required: true
-          type: boolean
-        - name: BunkBed
-          in: query
-          required: true
-          type: boolean
-        - name: CentralLocking
-          in: query
-          required: true
-          type: boolean
-        - name: CircularSeatingArrangement
-          in: query
-          required: true
-          type: boolean
-        - name: CruiseControl
-          in: query
-          required: true
-          type: boolean
-        - name: ElectricHeatedSeats
-          in: query
-          required: true
-          type: boolean
-        - name: MiddleSeatingArrangement
-          in: query
-          required: true
-          type: boolean
-        - name: NavigationSystem
-          in: query
-          required: true
-          type: boolean
-        - name: PowerAssistedSteering
-          in: query
-          required: true
-          type: boolean
-        - name: SecondaryAirConditioning
-          in: query
-          required: true
-          type: boolean
-        - name: SeparateShower
-          in: query
-          required: true
-          type: boolean
-        - name: SideSeatingArrangement
-          in: query
-          required: true
-          type: boolean
-        - name: TV
-          in: query
-          required: true
-          type: boolean
-        - name: WC
-          in: query
-          required: true
-          type: boolean
-        - name: EmissionClassFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-            - 5
-            - 6
-        - name: EmissionStickerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: ABS
-          in: query
-          required: true
-          type: boolean
-        - name: ESP
-          in: query
-          required: true
-          type: boolean
-        - name: FourWheelDrive
-          in: query
-          required: true
-          type: boolean
-        - name: ParticulateFilter
-          in: query
-          required: true
-          type: boolean
-        - name: OnlineSince
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: IsDamaged
-          in: query
-          required: true
-          type: boolean
-        - name: Warranty
-          in: query
-          required: true
-          type: boolean
-        - name: WithPicture
-          in: query
-          required: true
-          type: boolean
-        - name: FullServiceHistory
-          in: query
-          required: true
-          type: boolean
-        - name: RentingPossible
-          in: query
-          required: true
-          type: boolean
-        - name: PowerUnit
-          in: query
-          required: true
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-        - name: Metallic
-          in: query
-          required: true
-          type: boolean
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: VehicleOrderBy
-          in: query
-          required: true
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: IsDesc
-          in: query
-          required: true
-          type: boolean
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/ItemCountViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
-  '/api/truck/{adsId}':
-    get:
-      tags:
-        - TruckAds
-      summary: get detail of a truck ads
-      operationId: ApiTruckByAdsIdGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: adsId
-          in: path
-          description: truck ads guid
-          required: true
-          type: string
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/SmallTruckAdsViewModel'
-        '201':
-          description: Success
-          schema:
-            $ref: '#/definitions/BigTruckAdsViewModel'
-        '202':
-          description: Success
-          schema:
-            $ref: '#/definitions/SemiTrailerTruckAdsViewModel'
-        '203':
-          description: Success
-          schema:
-            $ref: '#/definitions/TrailersAdsViewModel'
-        '204':
-          description: Success
-          schema:
-            $ref: '#/definitions/SemiTrailersAdsViewModel'
-        '205':
-          description: Success
-          schema:
-            $ref: '#/definitions/BusCoachAdsViewModel'
-        '206':
-          description: Success
-          schema:
-            $ref: '#/definitions/AgriculturalVehicleAdsViewModel'
-        '207':
-          description: Success
-          schema:
-            $ref: '#/definitions/BusCoachAdsViewModel'
-        '208':
-          description: Success
-          schema:
-            $ref: '#/definitions/ForkliftTruckViewModel'
-        '209':
-          description: Success
-          schema:
-            $ref: '#/definitions/ConstructionVehicleAdsViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
-  /api/truck/smalltruck:
-    get:
-      tags:
-        - TruckAds
-      summary: advanced search for small truck ads
-      operationId: ApiTruckSmalltruckGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: CategoryIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-              - 14
-              - 15
-              - 16
-              - 17
-              - 18
-              - 19
-              - 20
-              - 21
-              - 22
-              - 23
-              - 24
-              - 25
-              - 26
-              - 27
-              - 28
-              - 29
-              - 30
-          collectionFormat: multi
-        - name: IncludeMakeIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: IncludeModelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: FirstRegistrationYearFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FirstRegistrationYearTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FuelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-          collectionFormat: multi
-        - name: GearboxIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-          collectionFormat: multi
-        - name: Colors
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-          collectionFormat: multi
-        - name: SlidingDoor
-          in: query
-          required: true
-          type: boolean
-        - name: Crane
-          in: query
-          required: true
-          type: boolean
-        - name: TailLift
-          in: query
-          required: true
-          type: boolean
-        - name: TrailerCoupling
-          in: query
-          required: true
-          type: boolean
-        - name: AirConditioning
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-        - name: PermissiveGVWFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissiveGVWTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: DrivingCab
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-        - name: NumberOfSeatsFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: NumberOfSeatsTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: AuxiliaryHeating
-          in: query
-          required: true
-          type: boolean
-        - name: CentralLocking
-          in: query
-          required: true
-          type: boolean
-        - name: CruiseControl
-          in: query
-          required: true
-          type: boolean
-        - name: Divider
-          in: query
-          required: true
-          type: boolean
-        - name: NavigationSystem
-          in: query
-          required: true
-          type: boolean
-        - name: EmissionClassFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-            - 5
-            - 6
-        - name: EmissionStickerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: ABS
-          in: query
-          required: true
-          type: boolean
-        - name: ESP
-          in: query
-          required: true
-          type: boolean
-        - name: FourWheelDrive
-          in: query
-          required: true
-          type: boolean
-        - name: ParticulateFilter
-          in: query
-          required: true
-          type: boolean
-        - name: PowerAssistedSteering
-          in: query
-          required: true
-          type: boolean
-        - name: OnlineSince
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: WithPicture
-          in: query
-          required: true
-          type: boolean
-        - name: IsDamaged
-          in: query
-          required: true
-          type: boolean
-        - name: FullServiceHistory
-          in: query
-          required: true
-          type: boolean
-        - name: Municipal
-          in: query
-          required: true
-          type: boolean
-        - name: RentingPossible
-          in: query
-          required: true
-          type: boolean
-        - name: PowerUnit
-          in: query
-          required: true
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-        - name: Metallic
-          in: query
-          required: true
-          type: boolean
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: page
-          in: query
-          description: search result page
-          required: true
-          type: integer
-          format: int32
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/VehicleAdsListViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
-  /api/truck/smalltruck/count:
-    get:
-      tags:
-        - TruckAds
-      summary: count smalltruck advanced search result
-      operationId: ApiTruckSmalltruckCountGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: CategoryIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-              - 14
-              - 15
-              - 16
-              - 17
-              - 18
-              - 19
-              - 20
-              - 21
-              - 22
-              - 23
-              - 24
-              - 25
-              - 26
-              - 27
-              - 28
-              - 29
-              - 30
-          collectionFormat: multi
-        - name: IncludeMakeIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: IncludeModelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: FirstRegistrationYearFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FirstRegistrationYearTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FuelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-          collectionFormat: multi
-        - name: GearboxIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-          collectionFormat: multi
-        - name: Colors
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-          collectionFormat: multi
-        - name: SlidingDoor
-          in: query
-          required: true
-          type: boolean
-        - name: Crane
-          in: query
-          required: true
-          type: boolean
-        - name: TailLift
-          in: query
-          required: true
-          type: boolean
-        - name: TrailerCoupling
-          in: query
-          required: true
-          type: boolean
-        - name: AirConditioning
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-        - name: PermissiveGVWFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissiveGVWTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: DrivingCab
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-        - name: NumberOfSeatsFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: NumberOfSeatsTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: AuxiliaryHeating
-          in: query
-          required: true
-          type: boolean
-        - name: CentralLocking
-          in: query
-          required: true
-          type: boolean
-        - name: CruiseControl
-          in: query
-          required: true
-          type: boolean
-        - name: Divider
-          in: query
-          required: true
-          type: boolean
-        - name: NavigationSystem
-          in: query
-          required: true
-          type: boolean
-        - name: EmissionClassFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-            - 5
-            - 6
-        - name: EmissionStickerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: ABS
-          in: query
-          required: true
-          type: boolean
-        - name: ESP
-          in: query
-          required: true
-          type: boolean
-        - name: FourWheelDrive
-          in: query
-          required: true
-          type: boolean
-        - name: ParticulateFilter
-          in: query
-          required: true
-          type: boolean
-        - name: PowerAssistedSteering
-          in: query
-          required: true
-          type: boolean
-        - name: OnlineSince
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: WithPicture
-          in: query
-          required: true
-          type: boolean
-        - name: IsDamaged
-          in: query
-          required: true
-          type: boolean
-        - name: FullServiceHistory
-          in: query
-          required: true
-          type: boolean
-        - name: Municipal
-          in: query
-          required: true
-          type: boolean
-        - name: RentingPossible
-          in: query
-          required: true
-          type: boolean
-        - name: PowerUnit
-          in: query
-          required: true
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-        - name: Metallic
-          in: query
-          required: true
-          type: boolean
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/ItemCountViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
-  /api/truck/bigtruck:
-    get:
-      tags:
-        - TruckAds
-      summary: bigtruck ads advanced search
-      operationId: ApiTruckBigtruckGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: CategoryIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-              - 14
-              - 15
-              - 16
-              - 17
-              - 18
-              - 19
-              - 20
-              - 21
-              - 22
-              - 23
-              - 24
-              - 25
-              - 26
-              - 27
-              - 28
-          collectionFormat: multi
-        - name: IncludeMakeIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: IncludeModelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: FirstRegistrationYearFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FirstRegistrationYearTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FuelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-          collectionFormat: multi
-        - name: GearboxIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-          collectionFormat: multi
-        - name: Colors
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-          collectionFormat: multi
-        - name: AlloyWheels
-          in: query
-          required: true
-          type: boolean
-        - name: Compressor
-          in: query
-          required: true
-          type: boolean
-        - name: Crane
-          in: query
-          required: true
-          type: boolean
-        - name: TailLift
-          in: query
-          required: true
-          type: boolean
-        - name: TrailerCoupling
-          in: query
-          required: true
-          type: boolean
-        - name: AirConditioning
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-        - name: Axles
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: WheelFormulas
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-          collectionFormat: multi
-        - name: PermissiveGVWFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissiveGVWTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: HydraulicInstallation
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-        - name: DrivingCab
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-        - name: AuxiliaryHeating
-          in: query
-          required: true
-          type: boolean
-        - name: CruiseControl
-          in: query
-          required: true
-          type: boolean
-        - name: NavigationSystem
-          in: query
-          required: true
-          type: boolean
-        - name: Retarder
-          in: query
-          required: true
-          type: boolean
-        - name: SecondAirConditioning
-          in: query
-          required: true
-          type: boolean
-        - name: EmissionClassFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-            - 5
-            - 6
-        - name: EmissionStickerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: ABS
-          in: query
-          required: true
-          type: boolean
-        - name: EBS
-          in: query
-          required: true
-          type: boolean
-        - name: ESP
-          in: query
-          required: true
-          type: boolean
-        - name: FourWheelDrive
-          in: query
-          required: true
-          type: boolean
-        - name: ParticulateFilter
-          in: query
-          required: true
-          type: boolean
-        - name: OnlineSince
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: IsDamaged
-          in: query
-          required: true
-          type: boolean
-        - name: WithPicture
-          in: query
-          required: true
-          type: boolean
-        - name: FullServiceHistory
-          in: query
-          required: true
-          type: boolean
-        - name: Municipal
-          in: query
-          required: true
-          type: boolean
-        - name: RentingPossible
-          in: query
-          required: true
-          type: boolean
-        - name: PowerUnit
-          in: query
-          required: true
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-        - name: Metallic
-          in: query
-          required: true
-          type: boolean
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: page
-          in: query
-          description: search result page
-          required: true
-          type: integer
-          format: int32
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/VehicleAdsListViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
-  /api/truck/bigtruck/count:
-    get:
-      tags:
-        - TruckAds
-      summary: count bigtruck ads advanced search
-      operationId: ApiTruckBigtruckCountGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: CategoryIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-              - 14
-              - 15
-              - 16
-              - 17
-              - 18
-              - 19
-              - 20
-              - 21
-              - 22
-              - 23
-              - 24
-              - 25
-              - 26
-              - 27
-              - 28
-          collectionFormat: multi
-        - name: IncludeMakeIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: IncludeModelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: FirstRegistrationYearFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FirstRegistrationYearTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FuelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-          collectionFormat: multi
-        - name: GearboxIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-          collectionFormat: multi
-        - name: Colors
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-          collectionFormat: multi
-        - name: AlloyWheels
-          in: query
-          required: true
-          type: boolean
-        - name: Compressor
-          in: query
-          required: true
-          type: boolean
-        - name: Crane
-          in: query
-          required: true
-          type: boolean
-        - name: TailLift
-          in: query
-          required: true
-          type: boolean
-        - name: TrailerCoupling
-          in: query
-          required: true
-          type: boolean
-        - name: AirConditioning
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-        - name: Axles
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: WheelFormulas
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-          collectionFormat: multi
-        - name: PermissiveGVWFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissiveGVWTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: HydraulicInstallation
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-        - name: DrivingCab
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-        - name: AuxiliaryHeating
-          in: query
-          required: true
-          type: boolean
-        - name: CruiseControl
-          in: query
-          required: true
-          type: boolean
-        - name: NavigationSystem
-          in: query
-          required: true
-          type: boolean
-        - name: Retarder
-          in: query
-          required: true
-          type: boolean
-        - name: SecondAirConditioning
-          in: query
-          required: true
-          type: boolean
-        - name: EmissionClassFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-            - 5
-            - 6
-        - name: EmissionStickerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: ABS
-          in: query
-          required: true
-          type: boolean
-        - name: EBS
-          in: query
-          required: true
-          type: boolean
-        - name: ESP
-          in: query
-          required: true
-          type: boolean
-        - name: FourWheelDrive
-          in: query
-          required: true
-          type: boolean
-        - name: ParticulateFilter
-          in: query
-          required: true
-          type: boolean
-        - name: OnlineSince
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: IsDamaged
-          in: query
-          required: true
-          type: boolean
-        - name: WithPicture
-          in: query
-          required: true
-          type: boolean
-        - name: FullServiceHistory
-          in: query
-          required: true
-          type: boolean
-        - name: Municipal
-          in: query
-          required: true
-          type: boolean
-        - name: RentingPossible
-          in: query
-          required: true
-          type: boolean
-        - name: PowerUnit
-          in: query
-          required: true
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-        - name: Metallic
-          in: query
-          required: true
-          type: boolean
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/ItemCountViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
-  /api/truck/trailers:
-    get:
-      tags:
-        - TruckAds
-      summary: advanced search for trailers
-      operationId: ApiTruckTrailersGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: CategoryIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-              - 14
-              - 15
-              - 16
-              - 17
-              - 18
-              - 19
-              - 20
-              - 21
-              - 22
-              - 23
-              - 24
-              - 25
-              - 26
-              - 27
-              - 28
-          collectionFormat: multi
-        - name: IncludeMakeIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: IncludeModelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: FirstRegistrationYearFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FirstRegistrationYearTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: AirSuspension
-          in: query
-          required: true
-          type: boolean
-        - name: Crane
-          in: query
-          required: true
-          type: boolean
-        - name: DiscBrake
-          in: query
-          required: true
-          type: boolean
-        - name: TailLift
-          in: query
-          required: true
-          type: boolean
-        - name: Axles
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: PermissiveGVWFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissiveGVWTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: LoadCapacityFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: LoadCapacityTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: ABS
-          in: query
-          required: true
-          type: boolean
-        - name: EBS
-          in: query
-          required: true
-          type: boolean
-        - name: OnlineSince
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: WithPicture
-          in: query
-          required: true
-          type: boolean
-        - name: RentingPossible
-          in: query
-          required: true
-          type: boolean
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-        - name: page
-          in: query
-          description: search result page
-          required: true
-          type: integer
-          format: int32
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/VehicleAdsListViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
-  /api/truck/trailers/count:
-    get:
-      tags:
-        - TruckAds
-      summary: count trailers ads advanced search result
-      operationId: ApiTruckTrailersCountGet
-      consumes: []
-      produces:
-        - application/json
-      parameters:
-        - name: CategoryIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-              - 4
-              - 5
-              - 6
-              - 7
-              - 8
-              - 9
-              - 10
-              - 11
-              - 12
-              - 13
-              - 14
-              - 15
-              - 16
-              - 17
-              - 18
-              - 19
-              - 20
-              - 21
-              - 22
-              - 23
-              - 24
-              - 25
-              - 26
-              - 27
-              - 28
-          collectionFormat: multi
-        - name: IncludeMakeIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: IncludeModelIds
-          in: query
-          required: false
-          type: array
-          items:
-            type: integer
-            format: int32
-          collectionFormat: multi
-        - name: FirstRegistrationYearFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: FirstRegistrationYearTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MainPriceTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PowerTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: MileageTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: AirSuspension
-          in: query
-          required: true
-          type: boolean
-        - name: Crane
-          in: query
-          required: true
-          type: boolean
-        - name: DiscBrake
-          in: query
-          required: true
-          type: boolean
-        - name: TailLift
-          in: query
-          required: true
-          type: boolean
-        - name: Axles
-          in: query
-          required: false
-          type: integer
-          format: int32
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-        - name: PermissiveGVWFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: PermissiveGVWTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: LoadCapacityFrom
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: LoadCapacityTo
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: ABS
-          in: query
-          required: true
-          type: boolean
-        - name: EBS
-          in: query
-          required: true
-          type: boolean
-        - name: OnlineSince
-          in: query
-          required: false
-          type: integer
-          format: int32
-        - name: WithPicture
-          in: query
-          required: true
-          type: boolean
-        - name: RentingPossible
-          in: query
-          required: true
-          type: boolean
-        - name: IsNew
-          in: query
-          required: false
-          type: boolean
-      responses:
-        '200':
-          description: Success
-          schema:
-            $ref: '#/definitions/ItemCountViewModel'
-        '400':
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/ErrorMessageViewModel'
   /api/user/register:
     post:
       tags:
@@ -4718,6 +2189,26 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/ErrorMessageViewModel'
+  /api/user:
+    get:
+      tags:
+        - User
+      operationId: ApiUserGet
+      consumes: []
+      produces: []
+      parameters:
+        - name: UserId
+          in: query
+          required: true
+          type: string
+          format: uuid
+        - name: ConfirmationToken
+          in: query
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Success
   /api/user/forgot-password:
     post:
       tags:
@@ -5184,7 +2675,7 @@ definitions:
         type: integer
       numberOfDoors:
         type: string
-      cO2EmissionsComb:
+      co2EmissionsComb:
         format: float
         type: number
       fuelConsumptionUrban:
@@ -5226,15 +2717,15 @@ definitions:
         type: boolean
       handsFreeKit:
         type: boolean
-      headupDisplay:
+      headUpDisplay:
         type: boolean
-      mP3Interface:
+      mp3Interface:
         type: boolean
       multifunctionSteeringWheel:
         type: boolean
       navigationSystem:
         type: boolean
-      onboardComputer:
+      onBoardComputer:
         type: boolean
       panoramicRoof:
         type: boolean
@@ -5256,9 +2747,9 @@ definitions:
         type: boolean
       roofRack:
         type: boolean
-      sportsPackage:
+      sportPackage:
         type: boolean
-      sportsSuspension:
+      sportSuspension:
         type: boolean
       trailerCoupling:
         type: boolean
@@ -5388,7 +2879,7 @@ definitions:
       numberOfDoors:
         format: int32
         type: integer
-      cO2EmissionsComb:
+      co2EmissionsComb:
         format: float
         type: number
       fuelConsumptionUrban:
@@ -5400,25 +2891,6 @@ definitions:
       fuelConsumptionComb:
         format: float
         type: number
-      emissionClass:
-        format: int32
-        enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-          - 6
-        type: integer
-      emissionSticker:
-        format: int32
-        enum:
-          - 0
-          - 1
-          - 2
-          - 3
-          - 4
-        type: integer
       numberOfOwners:
         format: int32
         type: integer
@@ -5501,15 +2973,15 @@ definitions:
         type: boolean
       handsFreeKit:
         type: boolean
-      headupDisplay:
+      headUpDisplay:
         type: boolean
-      mP3Interface:
+      mp3Interface:
         type: boolean
       multifunctionSteeringWheel:
         type: boolean
       navigationSystem:
         type: boolean
-      onboardComputer:
+      onBoardComputer:
         type: boolean
       panoramicRoof:
         type: boolean
@@ -5537,9 +3009,9 @@ definitions:
         type: boolean
       roofRack:
         type: boolean
-      sportsPackage:
+      sportPackage:
         type: boolean
-      sportsSuspension:
+      sportSuspension:
         type: boolean
       trailerCoupling:
         type: boolean
@@ -5596,6 +3068,7 @@ definitions:
         type: string
       type:
         type: string
+        readOnly: true
       seoName:
         type: string
       address:
@@ -5624,6 +3097,26 @@ definitions:
           - 1
           - 2
           - 3
+          - 4
+        type: integer
+      emissionSticker:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+        type: integer
+      emissionClass:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
         type: integer
       isDamaged:
         type: boolean
@@ -5774,7 +3267,7 @@ definitions:
       numberOfDoors:
         format: int32
         type: integer
-      cO2EmissionsComb:
+      co2EmissionsComb:
         format: float
         type: number
       fuelConsumptionUrban:
@@ -5786,25 +3279,6 @@ definitions:
       fuelConsumptionComb:
         format: float
         type: number
-      emissionClass:
-        format: int32
-        enum:
-          - 1
-          - 2
-          - 3
-          - 4
-          - 5
-          - 6
-        type: integer
-      emissionSticker:
-        format: int32
-        enum:
-          - 0
-          - 1
-          - 2
-          - 3
-          - 4
-        type: integer
       interiorColor:
         format: int32
         enum:
@@ -5882,15 +3356,15 @@ definitions:
         type: boolean
       handsFreeKit:
         type: boolean
-      headupDisplay:
+      headUpDisplay:
         type: boolean
-      mP3Interface:
+      mp3Interface:
         type: boolean
       multifunctionSteeringWheel:
         type: boolean
       navigationSystem:
         type: boolean
-      onboardComputer:
+      onBoardComputer:
         type: boolean
       panoramicRoof:
         type: boolean
@@ -5918,9 +3392,9 @@ definitions:
         type: boolean
       roofRack:
         type: boolean
-      sportsPackage:
+      sportPackage:
         type: boolean
-      sportsSuspension:
+      sportSuspension:
         type: boolean
       trailerCoupling:
         type: boolean
@@ -6005,6 +3479,26 @@ definitions:
           - 1
           - 2
           - 3
+          - 4
+        type: integer
+      emissionClass:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+        type: integer
+      emissionSticker:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
         type: integer
       numberOfOwners:
         format: int32
@@ -6189,6 +3683,7 @@ definitions:
             - 1
             - 2
             - 3
+            - 4
           type: integer
       cubicCapacityFrom:
         format: int32
@@ -6289,13 +3784,13 @@ definitions:
           - 3
           - 4
         type: integer
-      rear:
+      parkingSensorRear:
         type: boolean
-      front:
+      parkingSensorFront:
         type: boolean
-      camera:
+      parkingSensorCamera:
         type: boolean
-      selfSteeringSystem:
+      parkingSensorSelfSteeringSystem:
         type: boolean
       sportSeats:
         type: boolean
@@ -6419,26 +3914,224 @@ definitions:
           - 3
           - 4
         type: integer
-  VehicleMakeViewModel:
+  MakeViewModel:
     type: object
     properties:
       name:
         type: string
       id:
-        format: int32
-        type: integer
+        format: uuid
+        type: string
       models:
         type: array
         items:
-          $ref: '#/definitions/VehicleModelViewModel'
-  VehicleModelViewModel:
+          $ref: '#/definitions/ModelViewModel'
+  ModelViewModel:
     type: object
     properties:
       name:
         type: string
       id:
+        format: uuid
+        type: string
+  CommercialVehicleAdsViewModel:
+    type: object
+    properties:
+      constructionYear:
         format: int32
         type: integer
+      permissibleGVW:
+        format: int32
+        type: integer
+      emissionSticker:
+        format: int32
+        type: integer
+      drivingCap:
+        type: string
+      airConditioning:
+        type: string
+      auxiliaryHeating:
+        type: boolean
+      cruiseControl:
+        type: boolean
+      navigationSystem:
+        type: boolean
+      abs:
+        type: boolean
+      esp:
+        type: boolean
+      fourWheelDrive:
+        type: boolean
+      particulateFilter:
+        type: boolean
+      fullServiceHistory:
+        type: boolean
+      rentingPossible:
+        type: boolean
+      id:
+        format: uuid
+        type: string
+      title:
+        type: string
+      seoName:
+        type: string
+      views:
+        format: int32
+        type: integer
+      postedTime:
+        format: date-time
+        type: string
+      isFavorite:
+        type: boolean
+      address:
+        type: string
+      status:
+        type: string
+      make:
+        type: string
+      model:
+        type: string
+      firstRegistration:
+        type: string
+      category:
+        type: string
+      subCategory:
+        type: string
+      imageLink:
+        type: string
+      mileage:
+        format: int32
+        type: integer
+      power:
+        format: int32
+        type: integer
+      gearbox:
+        type: string
+      isDamaged:
+        type: boolean
+      fuel:
+        type: string
+      mainPrice:
+        format: float
+        type: number
+      alternativePrice:
+        format: float
+        type: number
+      canNegotiate:
+        type: boolean
+      otherDescription:
+        type: string
+      type:
+        type: string
+      relativeURL:
+        type: string
+        readOnly: true
+      color:
+        type: string
+      vehicleInspectionValidUntil:
+        type: string
+      approvedUserProgramme:
+        type: string
+      imageURLs:
+        type: array
+        items:
+          type: string
+      vehicleNumber:
+        type: string
+      cubicCapacity:
+        format: float
+        type: number
+      isAccidentVehicle:
+        type: boolean
+  ConstructionVehicleAdsViewModel:
+    type: object
+    properties:
+      constructionYear:
+        format: int32
+        type: integer
+      operatingHours:
+        format: int32
+        type: integer
+      emissionsSticker:
+        format: int32
+        type: integer
+      rentingPossible:
+        type: boolean
+      id:
+        format: uuid
+        type: string
+      title:
+        type: string
+      seoName:
+        type: string
+      views:
+        format: int32
+        type: integer
+      postedTime:
+        format: date-time
+        type: string
+      isFavorite:
+        type: boolean
+      address:
+        type: string
+      status:
+        type: string
+      make:
+        type: string
+      model:
+        type: string
+      firstRegistration:
+        type: string
+      category:
+        type: string
+      subCategory:
+        type: string
+      imageLink:
+        type: string
+      mileage:
+        format: int32
+        type: integer
+      power:
+        format: int32
+        type: integer
+      gearbox:
+        type: string
+      isDamaged:
+        type: boolean
+      fuel:
+        type: string
+      mainPrice:
+        format: float
+        type: number
+      alternativePrice:
+        format: float
+        type: number
+      canNegotiate:
+        type: boolean
+      otherDescription:
+        type: string
+      type:
+        type: string
+      relativeURL:
+        type: string
+        readOnly: true
+      color:
+        type: string
+      vehicleInspectionValidUntil:
+        type: string
+      approvedUserProgramme:
+        type: string
+      imageURLs:
+        type: array
+        items:
+          type: string
+      vehicleNumber:
+        type: string
+      cubicCapacity:
+        format: float
+        type: number
+      isAccidentVehicle:
+        type: boolean
   VehicleUserFavoriteAdsViewModel:
     type: object
     properties:
@@ -6842,6 +4535,26 @@ definitions:
           - 1
           - 2
           - 3
+          - 4
+        type: integer
+      emissionClass:
+        format: int32
+        enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+        type: integer
+      emissionSticker:
+        format: int32
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
         type: integer
       numberOfOwners:
         format: int32
@@ -6895,1319 +4608,6 @@ definitions:
         type: boolean
       isSecondHand:
         type: boolean
-  MotorhomeAdsViewModel:
-    type: object
-    properties:
-      permissibleGVW:
-        format: float
-        type: number
-      numberOfBunks:
-        format: int32
-        type: integer
-      emissionClass:
-        type: string
-      emissionSticker:
-        format: int32
-        type: integer
-      numberOfOwners:
-        format: int32
-        type: integer
-      axles:
-        format: int32
-        type: integer
-      vehicleLength:
-        format: int32
-        type: integer
-      vehicleWidth:
-        format: int32
-        type: integer
-      vehicleHeight:
-        format: int32
-        type: integer
-      airConditioning:
-        type: string
-      parkingSensors:
-        type: boolean
-      bunkBed:
-        type: boolean
-      bed:
-        type: boolean
-      middleSeatingArrangement:
-        type: boolean
-      navigationSystem:
-        type: boolean
-      circularSeatingArrangement:
-        type: boolean
-      sideSeatingArrangement:
-        type: boolean
-      separateShower:
-        type: boolean
-      powerAssistedSteering:
-        type: boolean
-      electricHeatedSeats:
-        type: boolean
-      auxiliaryHeating:
-        type: boolean
-      secondaryAirConditioning:
-        type: boolean
-      tv:
-        type: boolean
-      cruiseControl:
-        type: boolean
-      wc:
-        type: boolean
-      centralLocking:
-        type: boolean
-      trailerCoupling:
-        type: boolean
-      damageByHail:
-        type: boolean
-      rearGarage:
-        type: boolean
-      awning:
-        type: boolean
-      solarEnergySystem:
-        type: boolean
-      disabledAccessible:
-        type: boolean
-      warranty:
-        type: boolean
-      fullServiceHistory:
-        type: boolean
-      rentingPossible:
-        type: boolean
-      abs:
-        type: boolean
-      fourWheelDrive:
-        type: boolean
-      esp:
-        type: boolean
-      particulateFilter:
-        type: boolean
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
-  SmallTruckAdsViewModel:
-    type: object
-    properties:
-      constructionYear:
-        format: int32
-        type: integer
-      permissibleGVW:
-        format: int32
-        type: integer
-      numberOfSeats:
-        format: int32
-        type: integer
-      emissionClass:
-        type: string
-      emissionSticker:
-        format: int32
-        type: integer
-      drivingCap:
-        type: string
-      vehicleWidth:
-        format: int32
-        type: integer
-      vehicleHeight:
-        format: int32
-        type: integer
-      euroPalletStorageSpaces:
-        format: int32
-        type: integer
-      shippingVolume:
-        format: int32
-        type: integer
-      loadingSpaceLength:
-        format: int32
-        type: integer
-      loadingSpaceWidth:
-        format: int32
-        type: integer
-      loadingSpaceHeight:
-        format: int32
-        type: integer
-      airConditioning:
-        type: string
-      navigationSystem:
-        type: boolean
-      powerAssistedSteering:
-        type: boolean
-      auxiliaryHeating:
-        type: boolean
-      cruiseControl:
-        type: boolean
-      divider:
-        type: boolean
-      centralLocking:
-        type: boolean
-      trailerCoupling:
-        type: boolean
-      crane:
-        type: boolean
-      tailLift:
-        type: boolean
-      slidingDoor:
-        type: boolean
-      municipal:
-        type: boolean
-      fullServiceHistory:
-        type: boolean
-      rentingPossible:
-        type: boolean
-      abs:
-        type: boolean
-      fourWheelDrive:
-        type: boolean
-      esp:
-        type: boolean
-      particulateFilter:
-        type: boolean
-      subType:
-        type: string
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
-  BigTruckAdsViewModel:
-    type: object
-    properties:
-      constructionYear:
-        format: int32
-        type: integer
-      permissibleGVW:
-        format: int32
-        type: integer
-      numberOfSeats:
-        format: int32
-        type: integer
-      emissionClass:
-        type: string
-      emissionSticker:
-        format: int32
-        type: integer
-      drivingCap:
-        type: string
-      vehicleWidth:
-        format: int32
-        type: integer
-      vehicleHeight:
-        format: int32
-        type: integer
-      euroPalletStorageSpaces:
-        format: int32
-        type: integer
-      shippingVolume:
-        format: int32
-        type: integer
-      loadingSpaceLength:
-        format: int32
-        type: integer
-      loadingSpaceWidth:
-        format: int32
-        type: integer
-      loadingSpaceHeight:
-        format: int32
-        type: integer
-      airConditioning:
-        type: string
-      axles:
-        format: int32
-        type: integer
-      wheelFormula:
-        type: string
-      hydraulicInstallation:
-        type: string
-      ebs:
-        type: boolean
-      compressor:
-        type: boolean
-      navigationSystem:
-        type: boolean
-      retarder:
-        type: boolean
-      auxiliaryHeating:
-        type: boolean
-      secondaryAirConditioning:
-        type: boolean
-      cruiseControl:
-        type: boolean
-      trailerCoupling:
-        type: boolean
-      crane:
-        type: boolean
-      tailLift:
-        type: boolean
-      alloyWheels:
-        type: boolean
-      municipal:
-        type: boolean
-      fullServiceHistory:
-        type: boolean
-      rentingPossible:
-        type: boolean
-      abs:
-        type: boolean
-      fourWheelDrive:
-        type: boolean
-      esp:
-        type: boolean
-      particulateFilter:
-        type: boolean
-      subType:
-        type: string
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
-  SemiTrailerTruckAdsViewModel:
-    type: object
-    properties:
-      constructionYear:
-        format: int32
-        type: integer
-      permissibleGVW:
-        format: int32
-        type: integer
-      emissionClass:
-        type: string
-      emissionSticker:
-        format: int32
-        type: integer
-      drivingCap:
-        type: string
-      airConditioning:
-        type: string
-      axles:
-        format: int32
-        type: integer
-      wheelFormula:
-        type: string
-      hydraulicInstallation:
-        type: string
-      ebs:
-        type: boolean
-      compressor:
-        type: boolean
-      navigationSystem:
-        type: boolean
-      retarder:
-        type: boolean
-      auxiliaryHeating:
-        type: boolean
-      secondaryAirConditioning:
-        type: boolean
-      cruiseControl:
-        type: boolean
-      alloyWheels:
-        type: boolean
-      superSingleWheels:
-        type: boolean
-      fullFairing:
-        type: boolean
-      fullServiceHistory:
-        type: boolean
-      rentingPossible:
-        type: boolean
-      abs:
-        type: boolean
-      fourWheelDrive:
-        type: boolean
-      esp:
-        type: boolean
-      particulateFilter:
-        type: boolean
-      subType:
-        type: string
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
-  TrailersAdsViewModel:
-    type: object
-    properties:
-      constructionYear:
-        format: int32
-        type: integer
-      permissibleGVW:
-        format: int32
-        type: integer
-      loadCapacity:
-        format: int32
-        type: integer
-      vehicleWidth:
-        format: int32
-        type: integer
-      vehicleHeight:
-        format: int32
-        type: integer
-      euroPalletStorageSpaces:
-        format: int32
-        type: integer
-      shippingVolume:
-        format: int32
-        type: integer
-      loadingSpaceLength:
-        format: int32
-        type: integer
-      loadingSpaceWidth:
-        format: int32
-        type: integer
-      loadingSpaceHeight:
-        format: int32
-        type: integer
-      axles:
-        format: int32
-        type: integer
-      ebs:
-        type: boolean
-      crane:
-        type: boolean
-      tailLift:
-        type: boolean
-      rentingPossible:
-        type: boolean
-      abs:
-        type: boolean
-      airSuspension:
-        type: boolean
-      discBrake:
-        type: boolean
-      subType:
-        type: string
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
-  SemiTrailersAdsViewModel:
-    type: object
-    properties:
-      constructionYear:
-        format: int32
-        type: integer
-      permissibleGVW:
-        format: int32
-        type: integer
-      axles:
-        format: int32
-        type: integer
-      vehicleWidth:
-        format: int32
-        type: integer
-      vehicleHeight:
-        format: int32
-        type: integer
-      euroPalletStorageSpaces:
-        format: int32
-        type: integer
-      shippingVolume:
-        format: int32
-        type: integer
-      loadingSpaceLength:
-        format: int32
-        type: integer
-      loadingSpaceWidth:
-        format: int32
-        type: integer
-      loadingSpaceHeight:
-        format: int32
-        type: integer
-      loadCapacity:
-        format: int32
-        type: integer
-      ebs:
-        type: boolean
-      rentingPossible:
-        type: boolean
-      abs:
-        type: boolean
-      discBrake:
-        type: boolean
-      airSuspension:
-        type: boolean
-      subType:
-        type: string
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
-  BusCoachAdsViewModel:
-    type: object
-    properties:
-      constructionYear:
-        format: int32
-        type: integer
-      numberOfSeats:
-        format: int32
-        type: integer
-      emissionClass:
-        type: string
-      emissionSticker:
-        format: int32
-        type: integer
-      airConditioning:
-        type: string
-      driverSleepingCompartment:
-        type: boolean
-      kitchen:
-        type: boolean
-      coldStore:
-        type: boolean
-      retarder:
-        type: boolean
-      sleeperSeats:
-        type: boolean
-      auxiliaryHeating:
-        type: boolean
-      secondaryAirConditioning:
-        type: boolean
-      cruiseControl:
-        type: boolean
-      navigationSystem:
-        type: boolean
-      tv:
-        type: boolean
-      wc:
-        type: boolean
-      trailerCoupling:
-        type: boolean
-      fullServiceHistory:
-        type: boolean
-      rentingPossible:
-        type: boolean
-      abs:
-        type: boolean
-      esp:
-        type: boolean
-      particulateFilter:
-        type: boolean
-      subType:
-        type: string
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
-  AgriculturalVehicleAdsViewModel:
-    type: object
-    properties:
-      constructionYear:
-        format: int32
-        type: integer
-      operatingHours:
-        format: int32
-        type: integer
-      emissionsSticker:
-        format: int32
-        type: integer
-      airConditioning:
-        type: string
-      cabin:
-        type: boolean
-      powerAssistSteering:
-        type: boolean
-      auxiliaryHeating:
-        type: boolean
-      secondaryAirConditioning:
-        type: boolean
-      frontJack:
-        type: boolean
-      frontHydraulics:
-        type: boolean
-      municipal:
-        type: boolean
-      rentingPossible:
-        type: boolean
-      abs:
-        type: boolean
-      fourWheelDrive:
-        type: boolean
-      subType:
-        type: string
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
-  ForkliftTruckViewModel:
-    type: object
-    properties:
-      constructionYear:
-        format: int32
-        type: integer
-      operatingHours:
-        format: int32
-        type: integer
-      installationHeight:
-        format: int32
-        type: integer
-      liftingHeight:
-        format: int32
-        type: integer
-      liftingCapacityHeight:
-        format: int32
-        type: integer
-      airConditioning:
-        type: string
-      cabin:
-        type: boolean
-      powerAssistSteering:
-        type: boolean
-      rentingPossible:
-        type: boolean
-      trailerCoupling:
-        type: boolean
-      protectionRoof:
-        type: boolean
-      subType:
-        type: string
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
-  ConstructionVehicleAdsViewModel:
-    type: object
-    properties:
-      constructionYear:
-        format: int32
-        type: integer
-      operatingHours:
-        format: int32
-        type: integer
-      emissionsSticker:
-        format: int32
-        type: integer
-      rentingPossible:
-        type: boolean
-      abs:
-        type: boolean
-      fourWheelDrive:
-        type: boolean
-      bss:
-        type: boolean
-      particulateFilter:
-        type: boolean
-      quickChangeAttachment:
-        type: boolean
-      roadLicence:
-        type: boolean
-      centralLubricantApplic:
-        type: boolean
-      subType:
-        type: string
-      id:
-        format: uuid
-        type: string
-      title:
-        type: string
-      seoName:
-        type: string
-      views:
-        format: int32
-        type: integer
-      postedTime:
-        format: date-time
-        type: string
-      isFavorite:
-        type: boolean
-      address:
-        type: string
-      status:
-        type: string
-      make:
-        type: string
-      model:
-        type: string
-      firstRegistration:
-        type: string
-      category:
-        type: string
-      subCategory:
-        type: string
-      imageLink:
-        type: string
-      mileage:
-        format: int32
-        type: integer
-      power:
-        format: int32
-        type: integer
-      gearbox:
-        type: string
-      isDamaged:
-        type: boolean
-      fuel:
-        type: string
-      mainPrice:
-        format: float
-        type: number
-      alternativePrice:
-        format: float
-        type: number
-      canNegotiate:
-        type: boolean
-      otherDescription:
-        type: string
-      type:
-        type: string
-      relativeURL:
-        type: string
-        readOnly: true
-      color:
-        type: string
-      vehicleInspectionValidUntil:
-        type: string
-      approvedUserProgramme:
-        type: string
-      imageURLs:
-        type: array
-        items:
-          type: string
-      vehicleNumber:
-        type: string
-      cubicCapacity:
-        format: float
-        type: number
-      isAccidentVehicle:
-        type: boolean
   RegisterUserViewModel:
     type: object
     properties:
@@ -8239,6 +4639,11 @@ definitions:
       email:
         type: string
       avatarUrl:
+        type: string
+      userId:
+        format: uuid
+        type: string
+      phoneNumber:
         type: string
   MyAdsViewModel:
     type: object
